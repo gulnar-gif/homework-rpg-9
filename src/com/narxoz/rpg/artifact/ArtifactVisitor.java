@@ -4,7 +4,7 @@ package com.narxoz.rpg.artifact;
  * Visitor for heterogeneous vault artifacts.
  *
  * Concrete visitors implement these overloads to demonstrate double dispatch
- * without instanceof chains.
+ * without manual type-check chains.
  */
 public interface ArtifactVisitor {
 
