@@ -5,8 +5,8 @@ import com.narxoz.rpg.artifact.Inventory;
 /**
  * Represents a player-controlled hero participating in the vault run.
  *
- * The hero owns its mutable combat state and will eventually create and
- * restore mementos for the Chronomancer's Vault rewind mechanic.
+ * The hero owns its mutable combat state and creates or restores mementos for
+ * the Chronomancer's Vault rewind mechanic.
  */
 public class Hero {
 
@@ -82,7 +82,7 @@ public class Hero {
      * @param amount the damage to apply; must be non-negative
      */
     public void takeDamage(int amount) {
-        hp = Math.max(0, hp - amount);
+        hp = Math.max(0, hp - Math.max(0, amount));
     }
 
     /**
@@ -91,7 +91,7 @@ public class Hero {
      * @param amount the HP to restore; must be non-negative
      */
     public void heal(int amount) {
-        hp = Math.min(maxHp, hp + amount);
+        hp = Math.min(maxHp, hp + Math.max(0, amount));
     }
 
     /**
@@ -150,13 +150,20 @@ public class Hero {
     }
 
     /**
-     * Creates a memento placeholder for the hero's current state.
+     * Creates a memento for the hero's current state.
      *
-     * @return a HeroMemento snapshot, or null in the scaffold
+     * @return a HeroMemento snapshot
      */
     public HeroMemento createMemento() {
-        // TODO: capture the full mutable state into a HeroMemento.
-        return null;
+        return new HeroMemento(
+                name,
+                hp,
+                mana,
+                gold,
+                maxHp,
+                attackPower,
+                defense,
+                inventory.getArtifacts());
     }
 
     /**
@@ -165,7 +172,17 @@ public class Hero {
      * @param memento the snapshot to restore from
      */
     public void restoreFromMemento(HeroMemento memento) {
-        // TODO: read the snapshot and restore the hero's mutable state.
+        if (memento == null) {
+            return;
+        }
+        if (!name.equals(memento.getName())) {
+            throw new IllegalArgumentException("Memento belongs to a different hero.");
+        }
+
+        hp = memento.getHp();
+        mana = memento.getMana();
+        gold = memento.getGold();
+        inventory = new Inventory(memento.getInventorySnapshot());
     }
 
     @Override
@@ -177,6 +194,7 @@ public class Hero {
                 + ", gold=" + gold
                 + ", attackPower=" + attackPower
                 + ", defense=" + defense
+                + ", inventoryItems=" + inventory.size()
                 + '}';
     }
 }

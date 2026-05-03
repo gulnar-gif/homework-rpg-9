@@ -1,0 +1,50 @@
+@startuml
+title Memento Pattern - Chronomancer Rewind
+
+class Hero {
+  -name: String
+  -hp: int
+  -mana: int
+  -gold: int
+  -inventory: Inventory
+  +createMemento(): HeroMemento
+  +restoreFromMemento(memento: HeroMemento)
+}
+
+class HeroMemento {
+  -name: String
+  -hp: int
+  -mana: int
+  -gold: int
+  -inventorySnapshot: List<Artifact>
+  ~getName(): String
+  ~getHp(): int
+  ~getMana(): int
+  ~getGold(): int
+  ~getInventorySnapshot(): List<Artifact>
+}
+
+class Caretaker {
+  -history: Deque<HeroMemento>
+  +save(memento: HeroMemento)
+  +undo(): HeroMemento
+  +peek(): HeroMemento
+  +size(): int
+}
+
+class ChronomancerEngine {
+  +runVault(party: List<Hero>): VaultRunResult
+}
+
+class VaultRunResult {
+  -artifactsAppraised: int
+  -mementosCreated: int
+  -restoredCount: int
+}
+
+Hero ..> HeroMemento : creates/restores
+Caretaker o-- HeroMemento : stores opaque snapshots
+ChronomancerEngine ..> Hero
+ChronomancerEngine ..> Caretaker
+ChronomancerEngine ..> VaultRunResult
+@enduml

@@ -1,0 +1,73 @@
+@startuml
+title Visitor Pattern - Artifact Appraisal
+
+interface ArtifactVisitor {
+  +visit(weapon: Weapon)
+  +visit(potion: Potion)
+  +visit(scroll: Scroll)
+  +visit(ring: Ring)
+  +visit(armor: Armor)
+}
+
+abstract class Artifact {
+  -name: String
+  -value: int
+  -weight: int
+  +accept(visitor: ArtifactVisitor)
+}
+
+class Weapon {
+  -attackBonus: int
+  +accept(visitor: ArtifactVisitor)
+}
+
+class Potion {
+  -healing: int
+  +accept(visitor: ArtifactVisitor)
+}
+
+class Scroll {
+  -spellName: String
+  +accept(visitor: ArtifactVisitor)
+}
+
+class Ring {
+  -magicBonus: int
+  +accept(visitor: ArtifactVisitor)
+}
+
+class Armor {
+  -defenseBonus: int
+  +accept(visitor: ArtifactVisitor)
+}
+
+class Inventory {
+  -artifacts: List<Artifact>
+  +addArtifact(artifact: Artifact)
+  +accept(visitor: ArtifactVisitor)
+  +copy(): Inventory
+}
+
+class GoldAppraiser
+class EnchantmentScanner
+class CurseDetector
+class WeightCalculator
+
+Artifact <|-- Weapon
+Artifact <|-- Potion
+Artifact <|-- Scroll
+Artifact <|-- Ring
+Artifact <|-- Armor
+
+Inventory o-- Artifact
+ArtifactVisitor <|.. GoldAppraiser
+ArtifactVisitor <|.. EnchantmentScanner
+ArtifactVisitor <|.. CurseDetector
+ArtifactVisitor <|.. WeightCalculator
+ArtifactVisitor ..> Weapon
+ArtifactVisitor ..> Potion
+ArtifactVisitor ..> Scroll
+ArtifactVisitor ..> Ring
+ArtifactVisitor ..> Armor
+Inventory ..> ArtifactVisitor : accept(visitor)
+@enduml
