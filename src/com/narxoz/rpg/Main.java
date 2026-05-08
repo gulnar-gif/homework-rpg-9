@@ -8,9 +8,6 @@ import com.narxoz.rpg.vault.ChronomancerEngine;
 import com.narxoz.rpg.vault.VaultRunResult;
 import java.util.List;
 
-/**
- * Entry point for Homework 9: Chronomancer's Vault.
- */
 public class Main {
 
     public static void main(String[] args) {
